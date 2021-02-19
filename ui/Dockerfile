@@ -1,7 +1,5 @@
-FROM alpine:latest
-RUN apk update \
-    && apk add ruby-full ruby-dev build-base && \ 
-    gem install bundler:1.14.6 --no-document
+FROM ruby:2.2
+RUN apt-get update -qq && apt-get install -y build-essential
 
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
@@ -14,3 +12,4 @@ ENV POST_SERVICE_PORT 5000
 ENV COMMENT_SERVICE_HOST comment
 ENV COMMENT_SERVICE_PORT 9292
 CMD ["puma"]
+
