@@ -1,0 +1,10 @@
+global:
+  slack_api_url: 'https://hooks.slack.com/services/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'
+
+route:
+  receiver: 'slack-notifications'
+
+receivers:
+- name: 'slack-notifications'
+  slack_configs:
+  - channel: '#vini-puh'
