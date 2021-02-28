@@ -1,0 +1,42 @@
+version: '3.3'
+services:
+  mongo_db:
+    container_name: mongodb
+    image: mongo:3.2
+    volumes:
+      - post_db:/data/db
+    networks:
+      reddit:
+       aliases:
+         - post_db
+         - comment_db
+      back_net:
+       aliases:
+         - post_db
+         - comment_db  
+  ui:
+    container_name: ui
+    image: ${USERNAME}/ui:logging
+    ports:
+      - '9292:9292'
+    networks:
+      - reddit
+      - front_net
+  post:
+    container_name: post
+    image: ${USERNAME}/post:logging
+    networks:
+      - reddit
+  comment:
+    container_name: comment
+    image: ${USERNAME}/comment:logging
+    networks:
+      - reddit
+
+volumes:
+  post_db:
+
+networks:
+  reddit:
+  back_net:
+  front_net:

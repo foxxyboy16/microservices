@@ -1,34 +1,7 @@
 version: '3.3'
 services:
-  mongo_db:
-    image: mongo:3.2
-    volumes:
-      - post_db:/data/db
-    networks:
-      reddit:
-       aliases:
-         - post_db
-         - comment_db
-      back_net:
-       aliases:
-         - post_db
-         - comment_db  
-  ui:
-    image: ${USERNAME}/ui:latest
-    ports:
-      - ${PORT}/tcp
-    networks:
-      - reddit
-      - front_net
-  post:
-    image: ${USERNAME}/post:latest
-    networks:
-      - reddit
-  comment:
-    image: ${USERNAME}/comment:latest
-    networks:
-      - reddit
   prometheus:
+    container_name: prometheus
     image: ${USERNAME}/prometheus
     ports:
       - '9090:9090'
@@ -36,6 +9,7 @@ services:
       - reddit
 
   node-exporter:
+    container_name: node-exporter
     image: prom/node-exporter:v0.15.0
     user: root
     volumes:
@@ -50,11 +24,10 @@ services:
       - reddit
  
   mongodb-exporter:
+    container_name: mongodb-exporter
     image: ${USERNAME}/mongodb_exporter:latest
     environment:
       - MONGODB_URI='mongodb://mongo_db:27017'
-    depends_on:
-      - mongo_db
     ports:
       - '9216:9216'
     networks:
@@ -62,6 +35,7 @@ services:
       - back_net
 
   cadvisor:
+    container_name: cadvisor
     image: google/cadvisor:latest
     volumes:
       - '/:/rootfs:ro'
@@ -74,6 +48,7 @@ services:
       - reddit
 
   grafana:
+    container_name: grafana
     image: grafana/grafana
     volumes:
       - grafana_data:/var/lib/grafana
@@ -83,16 +58,17 @@ services:
     depends_on:
       - prometheus
     ports:
-      - 3000:3000
+      - '3000:3000'
     networks:
       - reddit
   
   alertmanager:
+    container_name: alertmanager
     image: ${USERNAME}/alertmanager
     command:
       - '--config.file=/etc/alertmanager/config.yml'
     ports:
-      - 9093:9093
+      - '9093:9093'
     networks:
       - reddit      
 
@@ -104,3 +80,4 @@ networks:
   reddit:
   back_net:
   front_net:
+
