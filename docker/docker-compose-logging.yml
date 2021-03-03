@@ -2,7 +2,7 @@ version: '3'
 services:
   fluentd:
     container_name: fluentd
-    image: docker_fluentd:latest
+    build: ./fluentd
     ports:
       - "24224:24224"
       - "24224:24224/udp"
@@ -28,8 +28,13 @@ services:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
     ports:
       - "5601:5601"
-    depends_on:
-      - elasticsearch
+    networks:
+      - back_net
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
     networks:
       - back_net
 
