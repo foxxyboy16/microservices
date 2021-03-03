@@ -6,7 +6,7 @@ services:
     volumes:
       - post_db:/data/db
     networks:
-      reddit:
+      back_net:
        aliases:
          - post_db
          - comment_db
@@ -17,6 +17,8 @@ services:
   ui:
     container_name: ui
     image: ${USERNAME}/ui:logging
+    environment:
+      - ZIPKIN_ENABLED=${ZIPKIN_ENABLED}
     ports:
       - '9292:9292'
     logging:
@@ -30,6 +32,8 @@ services:
   post:
     container_name: post
     image: ${USERNAME}/post:logging
+    environment:
+      - ZIPKIN_ENABLED=${ZIPKIN_ENABLED}
     ports:
       - '5000:5000'
     logging:
@@ -39,11 +43,17 @@ services:
         tag: service.post
     networks:
       - reddit
+      - front_net
+      - back_net
   comment:
     container_name: comment
     image: ${USERNAME}/comment:logging
+    environment:
+      - ZIPKIN_ENABLED=${ZIPKIN_ENABLED}
     networks:
       - reddit
+      - front_net
+      - back_net
 
 volumes:
   post_db:
