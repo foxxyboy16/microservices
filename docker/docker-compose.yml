@@ -9,10 +9,6 @@ services:
       back_net:
        aliases:
          - post_db
-         - comment_db
-      back_net:
-       aliases:
-         - post_db
          - comment_db  
   ui:
     container_name: ui
