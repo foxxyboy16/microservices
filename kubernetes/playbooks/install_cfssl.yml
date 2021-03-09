@@ -1,0 +1,6 @@
+---
+- name: Install cfsl and cffsljson
+  hosts: localhost
+  become: yes
+  roles:
+    - githubixx.cfssl
